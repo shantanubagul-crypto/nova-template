@@ -1,0 +1,660 @@
+:root {
+  --bg:        #0a0a0a;
+  --bg-2:      #111111;
+  --bg-3:      #181818;
+  --border:    rgba(255,255,255,0.08);
+  --accent:    #c8f135;
+  --accent-2:  #8aed2b;
+  --text:      #f0ede6;
+  --text-muted:#8a8580;
+  --text-dim:  #555;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius:    16px;
+  --radius-sm: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ── TYPOGRAPHY ── */
+h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.1; letter-spacing: -0.02em; }
+p { color: var(--text-muted); }
+a { color: inherit; text-decoration: none; }
+
+/* ── LAYOUT ── */
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+section { padding: 120px 0; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 100px;
+  font-family: var(--font-body); font-size: 15px; font-weight: 500;
+  cursor: pointer; transition: all 0.25s ease; border: none;
+}
+.btn-primary {
+  background: var(--accent); color: #0a0a0a;
+}
+.btn-primary:hover { background: var(--accent-2); transform: translateY(-1px); box-shadow: 0 8px 30px rgba(200,241,53,0.3); }
+.btn-ghost {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--bg-3); border-color: rgba(255,255,255,0.15); }
+
+/* ── BADGE ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 100px;
+  border: 1px solid var(--border); background: var(--bg-2);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+/* ╔══════════════════════════════╗
+   ║           NAVBAR             ║
+   ╚══════════════════════════════╝ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 0;
+  background: rgba(10,10,10,0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: var(--font-head); font-size: 20px; font-weight: 800;
+  color: var(--text); letter-spacing: -0.03em;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links {
+  display: flex; align-items: center; gap: 32px;
+  list-style: none;
+}
+.nav-links a { font-size: 14px; color: var(--text-muted); transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta { display: flex; align-items: center; gap: 12px; }
+.nav-menu-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--text); }
+
+/* ╔══════════════════════════════╗
+   ║            HERO              ║
+   ╚══════════════════════════════╝ */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: 100px;
+  position: relative; overflow: hidden;
+}
+
+/* Glow blobs */
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(120px); opacity: 0.15; pointer-events: none;
+}
+.blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -150px; animation: blobFloat 8s ease-in-out infinite; }
+.blob-2 { width: 400px; height: 400px; background: #3b82f6; bottom: 0; left: -100px; animation: blobFloat 10s ease-in-out infinite reverse; }
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -30px) scale(1.05); }
+}
+
+.hero-inner {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+}
+.hero-content { display: flex; flex-direction: column; gap: 28px; }
+.hero-title {
+  font-size: clamp(44px, 5.5vw, 72px);
+  font-weight: 800; color: var(--text);
+}
+.hero-title em { font-style: normal; color: var(--accent); }
+.hero-desc { font-size: 18px; line-height: 1.7; max-width: 440px; }
+.hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.hero-social-proof {
+  display: flex; align-items: center; gap: 12px;
+  padding-top: 8px;
+}
+.avatars { display: flex; }
+.avatars span {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--bg);
+  background: var(--bg-3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: var(--accent);
+  margin-left: -8px;
+  overflow: hidden;
+}
+.avatars span:first-child { margin-left: 0; }
+.social-proof-text { font-size: 13px; color: var(--text-muted); }
+.social-proof-text strong { color: var(--text); }
+
+/* Hero visual */
+.hero-visual {
+  position: relative;
+  animation: fadeInUp 0.8s ease 0.3s both;
+}
+.hero-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+}
+.hero-card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.window-dot { width: 10px; height: 10px; border-radius: 50%; }
+.hero-card-body { padding: 24px; }
+
+/* Mini chart bars */
+.chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin-bottom: 20px; }
+.bar {
+  flex: 1; border-radius: 6px 6px 0 0;
+  background: var(--bg-3);
+  animation: barGrow 1s ease forwards;
+  transform-origin: bottom;
+}
+.bar.active { background: var(--accent); }
+
+@keyframes barGrow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+.metric-row { display: flex; gap: 12px; }
+.metric-card {
+  flex: 1; background: var(--bg-3); border-radius: 12px; padding: 16px;
+  border: 1px solid var(--border);
+}
+.metric-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.metric-value { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--text); }
+.metric-change { font-size: 12px; color: var(--accent); margin-top: 2px; }
+
+.floating-pill {
+  position: absolute; bottom: -16px; left: -24px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 100px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  animation: floatPill 4s ease-in-out infinite;
+}
+@keyframes floatPill { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.pill-icon { font-size: 16px; }
+
+/* ╔══════════════════════════════╗
+   ║            LOGOS             ║
+   ╚══════════════════════════════╝ */
+#logos {
+  padding: 60px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.logos-label { text-align: center; font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 36px; }
+.logos-track {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: 48px;
+}
+.logo-item {
+  font-family: var(--font-head); font-size: 18px; font-weight: 700;
+  color: var(--text-dim); letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+.logo-item:hover { color: var(--text-muted); }
+
+/* ╔══════════════════════════════╗
+   ║          FEATURES            ║
+   ╚══════════════════════════════╝ */
+#features { background: var(--bg); }
+.section-header { text-align: center; margin-bottom: 72px; }
+.section-header h2 { font-size: clamp(32px, 4vw, 52px); font-weight: 800; margin: 16px 0 20px; }
+.section-header p { font-size: 18px; max-width: 520px; margin: 0 auto; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border-radius: 20px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.feature-card {
+  background: var(--bg); padding: 40px 36px;
+  transition: background 0.3s;
+  cursor: default;
+}
+.feature-card:hover { background: var(--bg-2); }
+.feature-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--bg-3); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 24px;
+}
+.feature-card h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.feature-card p { font-size: 15px; line-height: 1.65; }
+
+/* ╔══════════════════════════════╗
+   ║       HOW IT WORKS           ║
+   ╚══════════════════════════════╝ */
+#how { background: var(--bg-2); }
+.steps {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute; top: 28px; left: calc(16.67% + 20px); right: calc(16.67% + 20px);
+  height: 1px; background: linear-gradient(90deg, var(--border), var(--accent), var(--border));
+}
+.step { display: flex; flex-direction: column; gap: 20px; }
+.step-number {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 20px; font-weight: 800;
+  color: var(--accent);
+  position: relative; z-index: 1;
+}
+.step h3 { font-size: 19px; font-weight: 700; color: var(--text); }
+.step p { font-size: 15px; }
+
+/* ╔══════════════════════════════╗
+   ║         TESTIMONIALS         ║
+   ╚══════════════════════════════╝ */
+#testimonials { background: var(--bg); }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.testimonial-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.testimonial-card:hover { border-color: rgba(200,241,53,0.2); transform: translateY(-4px); }
+.stars { display: flex; gap: 3px; margin-bottom: 16px; }
+.star { color: var(--accent); font-size: 14px; }
+.testimonial-text { font-size: 15px; line-height: 1.7; color: var(--text-muted); margin-bottom: 24px; }
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.author-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bg-3);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; color: var(--accent);
+  border: 1px solid var(--border);
+}
+.author-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.author-role { font-size: 12px; color: var(--text-dim); }
+
+/* ╔══════════════════════════════╗
+   ║          PRICING             ║
+   ╚══════════════════════════════╝ */
+#pricing { background: var(--bg-2); }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
+.pricing-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px;
+  transition: transform 0.3s;
+}
+.pricing-card:hover { transform: translateY(-4px); }
+.pricing-card.featured {
+  background: var(--bg-3);
+  border-color: var(--accent);
+  position: relative;
+}
+.pricing-card.featured::before {
+  content: 'Most Popular';
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #0a0a0a;
+  font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 100px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.plan-name { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.plan-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+.plan-price .amount { font-family: var(--font-head); font-size: 48px; font-weight: 800; color: var(--text); }
+.plan-price .period { font-size: 14px; color: var(--text-muted); }
+.plan-desc { font-size: 14px; color: var(--text-dim); margin-bottom: 28px; }
+.plan-divider { height: 1px; background: var(--border); margin-bottom: 28px; }
+.plan-features { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+.plan-features li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted); }
+.plan-features li::before { content: '✓'; color: var(--accent); font-weight: 700; font-size: 13px; }
+.plan-features li.off { color: var(--text-dim); }
+.plan-features li.off::before { content: '–'; color: var(--text-dim); }
+.btn-plan { width: 100%; justify-content: center; }
+
+/* ╔══════════════════════════════╗
+   ║            FAQ               ║
+   ╚══════════════════════════════╝ */
+#faq { background: var(--bg); }
+.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.faq-item {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.faq-question {
+  width: 100%; padding: 24px 28px; text-align: left;
+  background: none; border: none; color: var(--text);
+  font-family: var(--font-body); font-size: 16px; font-weight: 500;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  cursor: pointer; transition: background 0.2s;
+}
+.faq-question:hover { background: var(--bg-3); }
+.faq-icon { font-size: 20px; color: var(--text-muted); transition: transform 0.3s; flex-shrink: 0; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+.faq-answer p { padding: 0 28px 24px; font-size: 15px; line-height: 1.7; }
+.faq-item.open .faq-icon { transform: rotate(45deg); color: var(--accent); }
+.faq-item.open .faq-answer { max-height: 200px; }
+
+/* ╔══════════════════════════════╗
+   ║             CTA              ║
+   ╚══════════════════════════════╝ */
+#cta {
+  background: var(--bg-2);
+  padding: 100px 0;
+}
+.cta-box {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 24px; padding: 80px 60px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; width: 500px; height: 300px;
+  background: radial-gradient(circle, rgba(200,241,53,0.12) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.cta-box h2 { font-size: clamp(32px, 4vw, 52px); font-weight: 800; margin-bottom: 20px; position: relative; }
+.cta-box p { font-size: 18px; max-width: 500px; margin: 0 auto 40px; position: relative; }
+.cta-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; position: relative; }
+
+/* ╔══════════════════════════════╗
+   ║           FOOTER             ║
+   ╚══════════════════════════════╝ */
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 60px 0 32px;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px; margin-bottom: 60px;
+}
+.footer-brand { display: flex; flex-direction: column; gap: 16px; }
+.footer-brand .nav-logo { font-size: 22px; }
+.footer-brand p { font-size: 14px; line-height: 1.7; max-width: 280px; }
+.footer-col h4 { font-size: 13px; font-weight: 600; color: var(--text); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-links a { font-size: 14px; color: var(--text-muted); transition: color 0.2s; }
+.footer-links a:hover { color: var(--text); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-bottom p { font-size: 13px; }
+.footer-socials { display: flex; gap: 16px; }
+.footer-socials a {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all 0.2s;
+}
+.footer-socials a:hover { background: var(--bg-3); border-color: var(--accent); color: var(--accent); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.animate.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  .pricing-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid .pricing-card:last-child { grid-column: 1 / -1; max-width: 380px; margin: 0 auto; width: 100%; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  section { padding: 80px 0; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-visual { display: none; }
+  .nav-links, .nav-cta .btn-ghost { display: none; }
+  .nav-menu-toggle { display: block; }
+  .features-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .steps::before { display: none; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pricing-grid .pricing-card:last-child { grid-column: auto; max-width: none; }
+  .faq-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+  .cta-box { padding: 48px 24px; }
+}
+
+  <div class="hero-content">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Now in public beta — free forever plan
+    </div>
+
+    <h1 class="hero-title">
+      The smarter way to<br><em>grow your SaaS</em>
+    </h1>
+
+    <p class="hero-desc">
+      Nova helps teams track metrics, understand users, and ship features faster — all in one beautifully designed platform.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#pricing" class="btn btn-primary">Start for free →</a>
+      <a href="#how" class="btn btn-ghost">See how it works</a>
+    </div>
+
+    <div class="hero-social-proof">
+      <div class="avatars">
+        <span>AK</span><span>JS</span><span>MR</span><span>LP</span>
+      </div>
+      <p class="social-proof-text">Loved by <strong>2,400+ founders</strong> worldwide</p>
+    </div>
+  </div>
+
+  <!-- Dashboard preview card -->
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="hero-card-header">
+        <div class="window-dot" style="background:#ff5f57"></div>
+        <div class="window-dot" style="background:#febc2e"></div>
+        <div class="window-dot" style="background:#28c840"></div>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-dim)">nova.app/dashboard</span>
+      </div>
+      <div class="hero-card-body">
+        <div class="chart">
+          <div class="bar" style="height:40%;animation-delay:0s"></div>
+          <div class="bar" style="height:60%;animation-delay:.05s"></div>
+          <div class="bar" style="height:45%;animation-delay:.1s"></div>
+          <div class="bar active" style="height:80%;animation-delay:.15s"></div>
+          <div class="bar" style="height:55%;animation-delay:.2s"></div>
+          <div class="bar active" style="height:90%;animation-delay:.25s"></div>
+          <div class="bar" style="height:65%;animation-delay:.3s"></div>
+          <div class="bar active" style="height:100%;animation-delay:.35s"></div>
+          <div class="bar" style="height:75%;animation-delay:.4s"></div>
+          <div class="bar active" style="height:88%;animation-delay:.45s"></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-card">
+            <div class="metric-label">MRR</div>
+            <div class="metric-value">$48.2k</div>
+            <div class="metric-change">↑ 12.4%</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Active users</div>
+            <div class="metric-value">2,491</div>
+            <div class="metric-change">↑ 8.1%</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Churn</div>
+            <div class="metric-value">1.2%</div>
+            <div class="metric-change">↓ 0.3%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="floating-pill">
+      <span class="pill-icon">🚀</span>
+      New user just signed up
+    </div>
+  </div>
+
+</div>
+
+  <div class="pricing-card animate">
+    <div class="plan-name">Starter</div>
+    <div class="plan-price">
+      <span class="amount">$0</span>
+      <span class="period">/ month</span>
+    </div>
+    <p class="plan-desc">For indie hackers &amp; solo founders.</p>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li>Up to 1,000 tracked users</li>
+      <li>5 dashboards</li>
+      <li>7-day data retention</li>
+      <li>Email reports</li>
+      <li class="off">AI insights</li>
+      <li class="off">Integrations</li>
+    </ul>
+    <a href="#" class="btn btn-ghost btn-plan">Get started free</a>
+  </div>
+
+  <div class="pricing-card featured animate">
+    <div class="plan-name">Pro</div>
+    <div class="plan-price">
+      <span class="amount">$49</span>
+      <span class="period">/ month</span>
+    </div>
+    <p class="plan-desc">For growing teams shipping fast.</p>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li>Up to 50,000 tracked users</li>
+      <li>Unlimited dashboards</li>
+      <li>1-year data retention</li>
+      <li>Email + Slack reports</li>
+      <li>AI insights</li>
+      <li>All integrations</li>
+    </ul>
+    <a href="#" class="btn btn-primary btn-plan">Start Pro trial →</a>
+  </div>
+
+  <div class="pricing-card animate">
+    <div class="plan-name">Enterprise</div>
+    <div class="plan-price">
+      <span class="amount">$199</span>
+      <span class="period">/ month</span>
+    </div>
+    <p class="plan-desc">For scaling companies &amp; agencies.</p>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li>Unlimited tracked users</li>
+      <li>Unlimited dashboards</li>
+      <li>Unlimited data retention</li>
+      <li>Custom reports &amp; exports</li>
+      <li>Advanced AI insights</li>
+      <li>SSO &amp; audit logs</li>
+    </ul>
+    <a href="#" class="btn btn-ghost btn-plan">Contact sales</a>
+  </div>
+
+</div>
+
+  <div class="faq-item animate">
+    <button class="faq-question">
+      How does the free plan work?
+      <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>The free plan is truly free — no credit card required. You get access to core analytics with up to 1,000 tracked users. Upgrade when you need more power.</p>
+    </div>
+  </div>
+
+  <div class="faq-item animate">
+    <button class="faq-question">
+      Can I cancel my subscription anytime?
+      <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Absolutely. You can cancel at any time from your account settings. No penalties, no lock-ins. We'll even prorate unused days if you cancel mid-cycle.</p>
+    </div>
+  </div>
+
+  <div class="faq-item animate">
+    <button class="faq-question">
+      What integrations do you support?
+      <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>We integrate with 40+ tools including Stripe, Segment, HubSpot, Intercom, Slack, Zapier, and more. If you need a custom integration, our API is fully documented.</p>
+    </div>
+  </div>
+
+  <div class="faq-item animate">
+    <button class="faq-question">
+      Is my data secure?
+      <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Yes. We're SOC 2 Type II certified, all data is encrypted at rest and in transit, and we offer GDPR/CCPA compliance tools out of the box.</p>
+    </div>
+  </div>
+
+  <div class="faq-item animate">
+    <button class="faq-question">
+      Do you offer a trial for paid plans?
+      <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>Yes! Every paid plan comes with a 14-day free trial. No credit card required to start. You'll only be billed if you choose to continue after the trial.</p>
+    </div>
+  </div>
+
+  <div class="faq-item animate">
+    <button class="faq-question">
+      What kind of support do you offer?
+      <span class="faq-icon">+</span>
+    </button>
+    <div class="faq-answer">
+      <p>All plans include email support. Pro users get priority Slack support, and Enterprise customers get a dedicated customer success manager and SLA guarantees.</p>
+    </div>
+  </div>
+
+</div>
